@@ -35,7 +35,7 @@ class UserState(StatesGroup):
 
 TRANSLATION = {
     'en': {
-        'welcome': "Welcome to Meat Checker Bot! Please select your language:",
+        'welcome': "Welcome to Food Checker Bot! Please select your language:",
         'language_selected': "Language set to English. You can now send food product images for Halal checking.",
         'processing': "Processing your image... Please wait.",
         'translating': "Translating text from image...",
@@ -49,7 +49,7 @@ TRANSLATION = {
                       "🛑 Please consult reliable sources or authorities if confirmation is needed."
     },
     'uz': {
-        'welcome': "Go'sht mahsulotlarini Tekshirish botiga xush kelibsiz! Iltimos, tilni tanlang:",
+        'welcome': "Ovqat mahsulotlarini Tekshirish botiga xush kelibsiz! Iltimos, tilni tanlang:",
         'language_selected': "Til o'zbek tiliga o'rnatildi. Endi mahsulotni tekshirish uchun oziq-ovqat mahsulotlarining rasmlarini yuborishingiz mumkin.",
         'processing': "Rasm qayta ishlanmoqda... Iltimos, kuting.",
         'translating': "Rasmdagi matn tarjima qilinmoqda...",
