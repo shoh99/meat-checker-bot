@@ -1,7 +1,8 @@
 import asyncio
 import logging
-from pathlib import Path
 
+from pathlib import Path
+from datetime import datetime
 from aiogram import Bot, Dispatcher, F
 from aiogram.enums import ParseMode
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
@@ -17,6 +18,8 @@ from utils import translator
 from utils.config import Config
 from utils.model import GroqAnalyzer
 from utils.translator import ImageTranslator, google_translator
+from utils import db
+from utils import helper
 
 load_dotenv()
 
@@ -56,7 +59,7 @@ TRANSLATION = {
         'analyzing': "Tarkibiy qismlar tahlil qilinmoqda...",
         'error': "Kechirasiz, xatolik yuz berdi. Iltimos, rasm aniq ekanligiga ishonch hosil qiling va qaytadan urinib ko'ring.",
         'send_image': "Iltimos, maxsulotni tekshirish uchun oziq-ovqat mahsulotining tarkibini rasmini yuboring.",
-        "disclaimer": "Biz hech qanday mahsulotni ✅ halol yoki ❌ nohalol deb da'vo qilmaymiz yoki sertifikatlamaymiz." 
+        "disclaimer": "Biz hech qanday mahsulotni ✅ halol yoki ❌ nohalol deb da'vo qilmaymiz yoki sertifikatlamaymiz."
                       " 🤖 Bizning bot faqat taqdim etilgan mahsulot ma'lumotlariga asoslanib, "
                       "taqiqlangan ingredientlar yoki tarkibiy qismlarni 🔍 aniqlash uchun tekshiradi. "
                       "📌 Mahsulotning mosligi haqidagi yakuniy qaror foydalanuvchining o‘ziga bog‘liq."
@@ -146,6 +149,8 @@ class PorkCheckerBot:
 
             await status_message.edit_text(TRANSLATION[language]['analyzing'])
             analysis = await self.analyzer.analyze_text(translation)
+
+            helper.insert_data(analysis, message)
 
             # Send final response
             if language == "uz":

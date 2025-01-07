@@ -14,7 +14,8 @@ class Config:
         self.NAVER_CLIENT_ID = os.getenv('NAVER_CLIENT_ID')
         self.NAVER_CLIENT_SECRET = os.getenv('NAVER_CLIENT_SECRET')
         self.GROQ_API_KEY = os.getenv('GROQ_API')
-
+        self.CONNECTION_STRING = os.getenv('CONNECTION_STRING')
+        self.DB_NAME = os.getenv('DB_NAME')
         # Validate required environment variables
         self._validate_config()
 
@@ -28,7 +29,9 @@ class Config:
             'BOT_TOKEN': self.BOT_TOKEN,
             'NAVER_CLIENT_ID': self.NAVER_CLIENT_ID,
             'NAVER_CLIENT_SECRET': self.NAVER_CLIENT_SECRET,
-            'GROQ_API_KEY': self.GROQ_API_KEY
+            'GROQ_API_KEY': self.GROQ_API_KEY,
+            'CONNECTION_STRING': self.CONNECTION_STRING,
+            'DB_NAME': self.DB_NAME
         }
 
         missing_vars = [var for var, value in required_vars.items() if not value]
