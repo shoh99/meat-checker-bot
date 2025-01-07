@@ -30,9 +30,18 @@ class GroqAnalyzer:
         Product text: {content}
 
         Reply format:
-        Product type: [with one or two word]
-        Issues: [List main concerns if any]
-        Advice: [Brief recommendation]"""
+        - Use HTML tags for formatting (e.g., <b> for bold instead of **).
+        - Product type: [with one or two word, wrapped in <b> tags]
+        - Issues: [List main concerns if any, use <b> tags for key points]
+        - Advice: [Brief recommendation, use <b> tags for emphasis]
+
+        Example:
+        <b>Product type:</b> Granola
+        <b>Issues:</b>
+        1. <b>Pork:</b> The product contains pork, which is a major concern for Halal compliance.
+
+        <b>Advice:</b> This product is not suitable for Halal consumption due to the presence of pork. Avoid this product or look for Halal-certified granola products.
+        """
 
         try:
             chat = [{"role": "system", "content": prompt}]
