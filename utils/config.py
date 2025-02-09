@@ -11,9 +11,7 @@ class Config:
 
     def __init__(self):
         self.BOT_TOKEN = os.getenv('BOT_TOKEN')
-        self.NAVER_CLIENT_ID = os.getenv('NAVER_CLIENT_ID')
-        self.NAVER_CLIENT_SECRET = os.getenv('NAVER_CLIENT_SECRET')
-        self.GROQ_API_KEY = os.getenv('GROQ_API')
+        self.GEMINI_API= os.getenv('GEMINI_API')
         self.CONNECTION_STRING = os.getenv('CONNECTION_STRING')
         self.DB_NAME = os.getenv('DB_NAME')
         # Validate required environment variables
@@ -27,9 +25,7 @@ class Config:
         """Validate that all required environment variables are set."""
         required_vars = {
             'BOT_TOKEN': self.BOT_TOKEN,
-            'NAVER_CLIENT_ID': self.NAVER_CLIENT_ID,
-            'NAVER_CLIENT_SECRET': self.NAVER_CLIENT_SECRET,
-            'GROQ_API_KEY': self.GROQ_API_KEY,
+            'GEMINI_API': self.GEMINI_API,
             'CONNECTION_STRING': self.CONNECTION_STRING,
             'DB_NAME': self.DB_NAME
         }

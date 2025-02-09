@@ -2,7 +2,6 @@ import asyncio
 import logging
 
 from pathlib import Path
-from datetime import datetime
 from aiogram import Bot, Dispatcher, F
 from aiogram.enums import ParseMode
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
@@ -12,13 +11,8 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from datetime import datetime
 from dotenv import load_dotenv
-from os import getenv
-from utils import model
-from utils import translator
 from utils.config import Config
-from utils.model import GroqAnalyzer
-from utils.translator import ImageTranslator, google_translator
-from utils import db
+from utils.model import GeminiAnalyzer
 from utils import helper
 
 load_dotenv()
@@ -38,6 +32,7 @@ class UserState(StatesGroup):
 
 TRANSLATION = {
     'en': {
+        'name':'ENGLISH',
         'welcome': "Welcome to Food Checker Bot! Please select your language:",
         'language_selected': "Language set to English. You can now send food product images for Halal checking.",
         'processing': "Processing your image... Please wait.",
@@ -52,6 +47,7 @@ TRANSLATION = {
                       "🛑 Please consult reliable sources or authorities if confirmation is needed."
     },
     'uz': {
+        'name':'UZBEK',
         'welcome': "Ovqat mahsulotlarini Tekshirish botiga xush kelibsiz! Iltimos, tilni tanlang:",
         'language_selected': "Til o'zbek tiliga o'rnatildi. Endi mahsulotni tekshirish uchun oziq-ovqat mahsulotlarining rasmlarini yuborishingiz mumkin.",
         'processing': "Rasm qayta ishlanmoqda... Iltimos, kuting.",
@@ -88,8 +84,7 @@ class PorkCheckerBot:
         self.config = config,
         self.bot = Bot(token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
         self.dp = Dispatcher()
-        self.translator = ImageTranslator(config.NAVER_CLIENT_ID, config.NAVER_CLIENT_SECRET)
-        self.analyzer = GroqAnalyzer(config.GROQ_API_KEY)
+        self.analyzer = GeminiAnalyzer(config.GEMINI_API)
         self._register_handlers()
 
     def _create_media_dir(self):
@@ -136,28 +131,22 @@ class PorkCheckerBot:
             photo = message.photo[-1]
             file = await self.bot.get_file(photo.file_id)
             self._create_media_dir()
-            img_path = "media/temp_{datetime.now().timestamp()}.jpg"
+            img_path = f"media/temp_{datetime.now().timestamp()}.jpg"
             temp_file = Path(img_path)
+
             await self.bot.download_file(file.file_path, img_path)
-
-            await status_message.edit_text(TRANSLATION[language]["translating"])
-            translation = await self.translator.translate_image(img_path)
-
-            if not translation:
-                await status_message.edit_text(TRANSLATION[language]["error"])
-                return
+            response_language = TRANSLATION[language]["name"]
 
             await status_message.edit_text(TRANSLATION[language]['analyzing'])
-            analysis = await self.analyzer.analyze_text(translation)
+            analysis = await self.analyzer.analyze_image(img_path, response_language)
 
             helper.insert_data(analysis, message)
 
             # Send final response
             if language == "uz":
-                uzbek_translation = await google_translator(analysis)
                 response = (
                     f"🔍 <b>Tahlil natijasi:</b>\n\n"
-                    f"✨ <b>Tahlil:</b>\n{uzbek_translation}\n\n"
+                    f"✨ <b>Tahlil:</b>\n{analysis}\n\n"
                     f"⚠️ <b>Ogohlantirish:</b>\n{TRANSLATION[language]['disclaimer']}"
                 )
             else:
