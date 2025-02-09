@@ -34,6 +34,6 @@ typing_extensions==4.12.2
 urllib3==2.3.0
 yarl==1.18.3
 pymongo~=4.10.1
-google-genai=1.0.0
-pillow=11.1.0
+google-genai==1.0.0
+pillow==11.1.0
 google~=3.0.0
